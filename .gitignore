@@ -1,0 +1,18 @@
+# Ignore Visual Studio files
+.vs/
+
+# Build folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+
+# Database files
+*.db
+*.mdf
+*.ldf
+
+# Development settings
+appsettings.Development.json
