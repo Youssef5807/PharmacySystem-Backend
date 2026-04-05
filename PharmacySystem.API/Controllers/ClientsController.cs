@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PharmacySystem.API.DTOs;
 using PharmacySystem.API.models;
-using System.Linq;
+
 namespace PharmacySystem.API.Controllers
 {
     [ApiController]
@@ -14,57 +17,106 @@ namespace PharmacySystem.API.Controllers
             _context = context;
         }
 
+        // 🔹 Get All Clients
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetClients()
         {
-            var clients = _context.Clients.ToList();
+            var clients = _context.Clients
+                .Select(c => new ClientDto
+                {
+                    Id = c.Client_ID,
+                    Client_Name = c.Client_Name,
+                    Client_Phone = c.Client_Phone,
+                    Client_Address = c.Client_Address
+                })
+                .ToList();
+
             return Ok(clients);
         }
 
+        // 🔹 Get Client by Id
         [HttpGet("{id:guid}")]
         public IActionResult GetClientById(Guid id)
         {
-            var client = _context.Clients.Find(id);
+            var client = _context.Clients
+                .Where(c => c.Client_ID == id)
+                .Select(c => new ClientDto
+                {
+                    Id = c.Client_ID,
+                    Client_Name = c.Client_Name,
+                    Client_Phone = c.Client_Phone,
+                    Client_Address = c.Client_Address
+                })
+                .FirstOrDefault();
+
             if (client == null)
                 return NotFound();
 
             return Ok(client);
         }
 
+        // 🔹 Create Client
         [HttpPost]
-        public IActionResult CreateClient(Client client)
+        public IActionResult CreateClient(CreateClientDto dto)
         {
+            var client = new Client
+            {
+                Client_ID = Guid.NewGuid(),
+                Client_Name = dto.Client_Name,
+                Client_Phone = dto.Client_Phone,
+                Client_Address = dto.Client_Address
+            };
+
             _context.Clients.Add(client);
             _context.SaveChanges();
-            return Ok(client);
+
+            return Ok(new ClientDto
+            {
+                Id = client.Client_ID,
+                Client_Name = client.Client_Name,
+                Client_Phone = client.Client_Phone,
+                Client_Address = client.Client_Address
+            });
         }
 
+        // 🔹 Update Client
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateClient(Guid id, Client client)
+        public IActionResult UpdateClient(Guid id, UpdateClientDto dto)
         {
-            var existingClient = _context.Clients.Find(id);
-            if (existingClient == null)
+            var client = _context.Clients.Find(id);
+
+            if (client == null)
                 return NotFound();
 
-            existingClient.Client_Name = client.Client_Name;
-            existingClient.Client_Phone = client.Client_Phone;
-            existingClient.Client_Address = client.Client_Address;
+            client.Client_Name = dto.Client_Name;
+            client.Client_Phone = dto.Client_Phone;
+            client.Client_Address = dto.Client_Address;
 
             _context.SaveChanges();
-            return Ok(existingClient);
+
+            return Ok(new ClientDto
+            {
+                Id = client.Client_ID,
+                Client_Name = client.Client_Name,
+                Client_Phone = client.Client_Phone,
+                Client_Address = client.Client_Address
+            });
         }
 
+        // 🔹 Delete Client
         [HttpDelete("{id:guid}")]
         public IActionResult DeleteClient(Guid id)
         {
             var client = _context.Clients.Find(id);
+
             if (client == null)
                 return NotFound();
 
             _context.Clients.Remove(client);
             _context.SaveChanges();
+
             return Ok("Client deleted.");
         }
-
     }
 }
