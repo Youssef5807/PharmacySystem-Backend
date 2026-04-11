@@ -1,29 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
-using PharmacySystem.API.models;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-public class Employee
+namespace PharmacySystem.API.models
 {
-    [Key]
-    public Guid Employee_ID { get; set; } = Guid.NewGuid();
+    public class Employee
+    {
+        [Key]
+        public int Employee_ID { get; set; }
 
-    [Required]
-    [MaxLength(70)]
-    public string Employee_Name { get; set; }
+        public string Employee_Name { get; set; } = string.Empty;
+        public string Employee_Role { get; set; } = string.Empty;
 
-    [Required]
-    public string Employee_Role { get; set; }
+        public decimal Salary { get; set; }
 
-    public decimal Salary { get; set; }
+        public string Attendance_Details { get; set; } = string.Empty;
 
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-    [Required]
-    public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
-    public string Attendance_Details { get; set; }
+        // ✅ Navigation
+        public ICollection<Purchase_Order> PurchaseOrders { get; set; }
 
-    public ICollection<Order> Orders { get; set; }
-    public ICollection<Purchase_Order> PurchaseOrders { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+    }
 }

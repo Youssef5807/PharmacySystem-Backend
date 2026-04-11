@@ -14,6 +14,8 @@ namespace PharmacySystem.API.DTOs
         public decimal Cost_Price { get; set; }
         public string Batch_No { get; set; }
         public int Quantity_In_Stock { get; set; }
+        public DateTime Expiry_Date { get; set; }
+
     }
 
     public class CreateMedicineDto
@@ -23,6 +25,8 @@ namespace PharmacySystem.API.DTOs
         public decimal Cost_Price { get; set; }
         public string Batch_No { get; set; }
         public int Quantity_In_Stock { get; set; }
+        public DateTime Expiry_Date { get; set; }
+
     }
 
     public class UpdateMedicineDto
@@ -32,5 +36,7 @@ namespace PharmacySystem.API.DTOs
         public decimal Cost_Price { get; set; }
         public string Batch_No { get; set; }
         public int Quantity_In_Stock { get; set; }
+        public DateTime Expiry_Date { get; set; }
+
     }
 }

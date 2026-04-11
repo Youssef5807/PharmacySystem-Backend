@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using PharmacySystem.API.models;
 
 namespace PharmacySystem.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251216194129_Initial")]
-    partial class Initial
+    [Migration("20260409185431_FinalFixStructure")]
+    partial class FinalFixStructure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,68 +21,12 @@ namespace PharmacySystem.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Employee", b =>
-                {
-                    b.Property<Guid>("Employee_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Attendance_Details")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Employee_Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(70)")
-                        .HasMaxLength(70);
-
-                    b.Property<string>("Employee_Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Employee_ID");
-
-                    b.ToTable("Employees");
-
-                    b.HasData(
-                        new
-                        {
-                            Employee_ID = new Guid("3eb3958c-f9fc-4b2e-abbb-89c1436b3852"),
-                            Attendance_Details = "Full-time",
-                            Email = "admin@pharmacy.moh.com",
-                            Employee_Name = "Mona Samir",
-                            Employee_Role = "Pharmacist",
-                            PasswordHash = "$2a$11$VlY1FV2ef1CGxJoT6aqmoupVd6zmSULlMG5gtjbItIzkAjllHR2gO",
-                            Salary = 5000m
-                        },
-                        new
-                        {
-                            Employee_ID = new Guid("6af2a4d0-2e74-4f25-829a-650509d11cb7"),
-                            Attendance_Details = "Full-time",
-                            Email = "RealAdmin@pharmacy.moh.com",
-                            Employee_Name = "System Admin",
-                            Employee_Role = "Admin",
-                            PasswordHash = "$2a$11$FgmVMXWUC0Ni/UAVYoVJmu75zO4AsY/xZH1igpXCIoN89nzfvnwVa",
-                            Salary = 5000m
-                        });
-                });
-
             modelBuilder.Entity("PharmacySystem.API.models.Client", b =>
                 {
-                    b.Property<Guid>("Client_ID")
+                    b.Property<int>("Client_ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Client_Address")
                         .IsRequired()
@@ -98,29 +43,41 @@ namespace PharmacySystem.API.Migrations
                     b.HasKey("Client_ID");
 
                     b.ToTable("Clients");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Client_ID = new Guid("50d1889f-2f61-4248-ae13-f39fbb6c90c6"),
-                            Client_Address = "Cairo",
-                            Client_Name = "Youssef Maher",
-                            Client_Phone = "0100000000"
-                        },
-                        new
-                        {
-                            Client_ID = new Guid("33dff5f2-14cf-4e79-947b-595b4caeb429"),
-                            Client_Address = "Cairo",
-                            Client_Name = "Youssef Maher",
-                            Client_Phone = "0100050000"
-                        },
-                        new
-                        {
-                            Client_ID = new Guid("6f0d4712-c186-40bd-9b79-6140402383fe"),
-                            Client_Address = "Giza",
-                            Client_Name = "Ahmed Ali",
-                            Client_Phone = "0101111111"
-                        });
+            modelBuilder.Entity("PharmacySystem.API.models.Employee", b =>
+                {
+                    b.Property<int>("Employee_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Attendance_Details")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Employee_Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Employee_Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Employee_ID");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("PharmacySystem.API.models.Medicine", b =>
@@ -155,41 +112,23 @@ namespace PharmacySystem.API.Migrations
                     b.HasKey("Medicine_ID");
 
                     b.ToTable("Medicines");
-
-                    b.HasData(
-                        new
-                        {
-                            Medicine_ID = 1,
-                            Batch_No = "B123",
-                            Cost_Price = 5m,
-                            Expiry_Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Medicine_Name = "Paracetamol",
-                            Quantity_In_Stock = 100,
-                            Selling_Price = 10m
-                        });
                 });
 
             modelBuilder.Entity("PharmacySystem.API.models.Order", b =>
                 {
-                    b.Property<int>("Order_ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("Client_ID")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("Client_ID1")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Employee_ID")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Employee_ID1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("Order_Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Order_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Payment_Method")
                         .IsRequired()
@@ -198,11 +137,9 @@ namespace PharmacySystem.API.Migrations
                     b.Property<decimal>("Total_Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Order_ID");
+                    b.HasKey("Client_ID");
 
-                    b.HasIndex("Client_ID1");
-
-                    b.HasIndex("Employee_ID1");
+                    b.HasIndex("Employee_ID");
 
                     b.ToTable("Orders");
                 });
@@ -217,16 +154,10 @@ namespace PharmacySystem.API.Migrations
                     b.Property<int>("Medicine_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Medicine_ID1")
-                        .HasColumnType("int");
-
                     b.Property<int>("Order_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Order_ID1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity_Sold")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Sub_Total")
@@ -234,9 +165,9 @@ namespace PharmacySystem.API.Migrations
 
                     b.HasKey("Order_Item_ID");
 
-                    b.HasIndex("Medicine_ID1");
+                    b.HasIndex("Medicine_ID");
 
-                    b.HasIndex("Order_ID1");
+                    b.HasIndex("Order_ID");
 
                     b.ToTable("OrderItems");
                 });
@@ -288,8 +219,8 @@ namespace PharmacySystem.API.Migrations
                     b.Property<int>("Employee_ID")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("Employee_ID1")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Employee_ID1")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PO_Date")
                         .HasColumnType("datetime2");
@@ -340,13 +271,13 @@ namespace PharmacySystem.API.Migrations
                 {
                     b.HasOne("PharmacySystem.API.models.Client", "Client")
                         .WithMany("Orders")
-                        .HasForeignKey("Client_ID1")
+                        .HasForeignKey("Client_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Employee", "Employee")
+                    b.HasOne("PharmacySystem.API.models.Employee", "Employee")
                         .WithMany("Orders")
-                        .HasForeignKey("Employee_ID1")
+                        .HasForeignKey("Employee_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -355,13 +286,13 @@ namespace PharmacySystem.API.Migrations
                 {
                     b.HasOne("PharmacySystem.API.models.Medicine", "Medicine")
                         .WithMany("OrderItems")
-                        .HasForeignKey("Medicine_ID1")
+                        .HasForeignKey("Medicine_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PharmacySystem.API.models.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("Order_ID1")
+                        .HasForeignKey("Order_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -383,7 +314,7 @@ namespace PharmacySystem.API.Migrations
 
             modelBuilder.Entity("PharmacySystem.API.models.Purchase_Order", b =>
                 {
-                    b.HasOne("Employee", "Employee")
+                    b.HasOne("PharmacySystem.API.models.Employee", "Employee")
                         .WithMany("PurchaseOrders")
                         .HasForeignKey("Employee_ID1")
                         .OnDelete(DeleteBehavior.Cascade)

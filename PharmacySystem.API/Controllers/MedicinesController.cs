@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PharmacySystem.API.DTOs;
 using PharmacySystem.API.models;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace PharmacySystem.API.Controllers
             _context = context;
         }
 
-        // 🔹 Get All Medicines
         [HttpGet]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult GetMedicines()
         {
             var medicines = _context.Medicines
@@ -35,8 +36,8 @@ namespace PharmacySystem.API.Controllers
             return Ok(medicines);
         }
 
-        // 🔹 Get Medicine by Id
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult GetMedicineById(int id)
         {
             var medicine = _context.Medicines
@@ -58,8 +59,8 @@ namespace PharmacySystem.API.Controllers
             return Ok(medicine);
         }
 
-        // 🔹 Create Medicine
         [HttpPost]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult AddMedicine(CreateMedicineDto dto)
         {
             var medicine = new Medicine
@@ -85,8 +86,8 @@ namespace PharmacySystem.API.Controllers
             });
         }
 
-        // 🔹 Update Medicine
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult UpdateMedicine(int id, UpdateMedicineDto dto)
         {
             var existingMedicine = _context.Medicines.Find(id);
@@ -113,8 +114,8 @@ namespace PharmacySystem.API.Controllers
             });
         }
 
-        // 🔹 Delete Medicine
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteMedicine(int id)
         {
             var medicine = _context.Medicines.Find(id);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PharmacySystem.API.Migrations
 {
-    public partial class Initial : Migration
+    public partial class FinalFixStructure : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,8 @@ namespace PharmacySystem.API.Migrations
                 name: "Clients",
                 columns: table => new
                 {
-                    Client_ID = table.Column<Guid>(nullable: false),
+                    Client_ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Client_Name = table.Column<string>(nullable: false),
                     Client_Phone = table.Column<string>(nullable: false),
                     Client_Address = table.Column<string>(nullable: false)
@@ -25,13 +26,14 @@ namespace PharmacySystem.API.Migrations
                 name: "Employees",
                 columns: table => new
                 {
-                    Employee_ID = table.Column<Guid>(nullable: false),
-                    Employee_Name = table.Column<string>(maxLength: 70, nullable: false),
+                    Employee_ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Employee_Name = table.Column<string>(nullable: false),
                     Employee_Role = table.Column<string>(nullable: false),
                     Salary = table.Column<decimal>(nullable: false),
+                    Attendance_Details = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: false),
-                    Attendance_Details = table.Column<string>(nullable: false)
+                    PasswordHash = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,28 +77,26 @@ namespace PharmacySystem.API.Migrations
                 name: "Orders",
                 columns: table => new
                 {
+                    Client_ID = table.Column<int>(nullable: false),
                     Order_ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Client_ID = table.Column<int>(nullable: false),
                     Employee_ID = table.Column<int>(nullable: false),
                     Order_Date = table.Column<DateTime>(nullable: false),
                     Total_Amount = table.Column<decimal>(nullable: false),
-                    Payment_Method = table.Column<string>(nullable: false),
-                    Client_ID1 = table.Column<Guid>(nullable: false),
-                    Employee_ID1 = table.Column<Guid>(nullable: false)
+                    Payment_Method = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Order_ID);
+                    table.PrimaryKey("PK_Orders", x => x.Client_ID);
                     table.ForeignKey(
-                        name: "FK_Orders_Clients_Client_ID1",
-                        column: x => x.Client_ID1,
+                        name: "FK_Orders_Clients_Client_ID",
+                        column: x => x.Client_ID,
                         principalTable: "Clients",
                         principalColumn: "Client_ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Employees_Employee_ID1",
-                        column: x => x.Employee_ID1,
+                        name: "FK_Orders_Employees_Employee_ID",
+                        column: x => x.Employee_ID,
                         principalTable: "Employees",
                         principalColumn: "Employee_ID",
                         onDelete: ReferentialAction.Cascade);
@@ -113,7 +113,7 @@ namespace PharmacySystem.API.Migrations
                     PO_Date = table.Column<DateTime>(nullable: false),
                     Total_Amount = table.Column<decimal>(nullable: false),
                     Supplier_ID1 = table.Column<int>(nullable: false),
-                    Employee_ID1 = table.Column<Guid>(nullable: false)
+                    Employee_ID1 = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,25 +140,23 @@ namespace PharmacySystem.API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Order_ID = table.Column<int>(nullable: false),
                     Medicine_ID = table.Column<int>(nullable: false),
-                    Quantity_Sold = table.Column<int>(nullable: false),
-                    Sub_Total = table.Column<decimal>(nullable: false),
-                    Order_ID1 = table.Column<int>(nullable: false),
-                    Medicine_ID1 = table.Column<int>(nullable: false)
+                    Quantity = table.Column<int>(nullable: false),
+                    Sub_Total = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Order_Item_ID);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Medicines_Medicine_ID1",
-                        column: x => x.Medicine_ID1,
+                        name: "FK_OrderItems_Medicines_Medicine_ID",
+                        column: x => x.Medicine_ID,
                         principalTable: "Medicines",
                         principalColumn: "Medicine_ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_Order_ID1",
-                        column: x => x.Order_ID1,
+                        name: "FK_OrderItems_Orders_Order_ID",
+                        column: x => x.Order_ID,
                         principalTable: "Orders",
-                        principalColumn: "Order_ID",
+                        principalColumn: "Client_ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -193,49 +191,20 @@ namespace PharmacySystem.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Clients",
-                columns: new[] { "Client_ID", "Client_Address", "Client_Name", "Client_Phone" },
-                values: new object[,]
-                {
-                    { new Guid("50d1889f-2f61-4248-ae13-f39fbb6c90c6"), "Cairo", "Youssef Maher", "0100000000" },
-                    { new Guid("33dff5f2-14cf-4e79-947b-595b4caeb429"), "Cairo", "Youssef Maher", "0100050000" },
-                    { new Guid("6f0d4712-c186-40bd-9b79-6140402383fe"), "Giza", "Ahmed Ali", "0101111111" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Employees",
-                columns: new[] { "Employee_ID", "Attendance_Details", "Email", "Employee_Name", "Employee_Role", "PasswordHash", "Salary" },
-                values: new object[,]
-                {
-                    { new Guid("3eb3958c-f9fc-4b2e-abbb-89c1436b3852"), "Full-time", "admin@pharmacy.moh.com", "Mona Samir", "Pharmacist", "$2a$11$VlY1FV2ef1CGxJoT6aqmoupVd6zmSULlMG5gtjbItIzkAjllHR2gO", 5000m },
-                    { new Guid("6af2a4d0-2e74-4f25-829a-650509d11cb7"), "Full-time", "RealAdmin@pharmacy.moh.com", "System Admin", "Admin", "$2a$11$FgmVMXWUC0Ni/UAVYoVJmu75zO4AsY/xZH1igpXCIoN89nzfvnwVa", 5000m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Medicines",
-                columns: new[] { "Medicine_ID", "Batch_No", "Cost_Price", "Expiry_Date", "Medicine_Name", "Quantity_In_Stock", "Selling_Price" },
-                values: new object[] { 1, "B123", 5m, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Paracetamol", 100, 10m });
-
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_Medicine_ID1",
+                name: "IX_OrderItems_Medicine_ID",
                 table: "OrderItems",
-                column: "Medicine_ID1");
+                column: "Medicine_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_Order_ID1",
+                name: "IX_OrderItems_Order_ID",
                 table: "OrderItems",
-                column: "Order_ID1");
+                column: "Order_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_Client_ID1",
+                name: "IX_Orders_Employee_ID",
                 table: "Orders",
-                column: "Client_ID1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_Employee_ID1",
-                table: "Orders",
-                column: "Employee_ID1");
+                column: "Employee_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseItems_Medicine_ID1",

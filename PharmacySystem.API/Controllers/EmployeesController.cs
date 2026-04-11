@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using PharmacySystem.API.models;
 
 namespace PharmacySystem.API.Controllers
@@ -28,49 +28,23 @@ namespace PharmacySystem.API.Controllers
             if (employee == null)
                 return NotFound();
 
-            return Ok(new
-            {
-                employee.Employee_ID,
-                employee.Employee_Name,
-                employee.Email,
-                employee.Employee_Role,
-                employee.Salary
-            });
+            return Ok(employee);
         }
 
         [HttpGet("all")]
-        [Authorize(Roles = "Admin")]
         public IActionResult GetAllEmployees()
         {
-            var employees = _context.Employees.Select(e => new
-            {
-                e.Employee_ID,
-                e.Employee_Name,
-                e.Email,
-                e.Employee_Role,
-                e.Salary
-            }).ToList();
-
-            return Ok(employees);
+            return Ok(_context.Employees.ToList());
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public IActionResult AddEmployee(AddEmployeeDto dto)
         {
-            var exists = _context.Employees.Any(e => e.Email == dto.Email);
-            if (exists)
-                return BadRequest("Email already exists");
-
-            var allowedRoles = new[] { "Admin", "Pharmacist" };
-            if (!allowedRoles.Contains(dto.Role))
-                return BadRequest("Invalid role");
-
             var employee = new Employee
             {
                 Employee_Name = dto.Name,
                 Email = dto.Email,
-                PasswordHash = PasswordHasher.Hash(dto.Password),
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Employee_Role = dto.Role,
                 Salary = dto.Salary,
                 Attendance_Details = dto.Attendance_Details
@@ -79,15 +53,7 @@ namespace PharmacySystem.API.Controllers
             _context.Employees.Add(employee);
             _context.SaveChanges();
 
-            return Ok(new
-            {
-                message = "Employee added successfully",
-                employee.Employee_ID,
-                employee.Employee_Name,
-                employee.Email,
-                employee.Employee_Role,
-                employee.Salary
-            });
+            return Ok(employee);
         }
     }
 }

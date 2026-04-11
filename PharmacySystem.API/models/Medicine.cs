@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 namespace PharmacySystem.API.models
 {
     public class Medicine
@@ -22,7 +22,7 @@ namespace PharmacySystem.API.models
         public int Quantity_In_Stock { get; set; }
 
         public DateTime Expiry_Date { get; set; }
-
+        [JsonIgnore]
         public ICollection<Order_Item> OrderItems { get; set; } = new List<Order_Item>();
         public ICollection<Purchase_Item> PurchaseItems { get; set; } = new List<Purchase_Item>();
     }

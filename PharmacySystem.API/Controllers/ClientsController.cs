@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PharmacySystem.API.DTOs;
 using PharmacySystem.API.models;
 
@@ -35,9 +34,10 @@ namespace PharmacySystem.API.Controllers
             return Ok(clients);
         }
 
-        // 🔹 Get Client by Id
-        [HttpGet("{id:guid}")]
-        public IActionResult GetClientById(Guid id)
+        // 🔹 Get Client By Id
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin,Pharmacist")]
+        public IActionResult GetClientById(int id)
         {
             var client = _context.Clients
                 .Where(c => c.Client_ID == id)
@@ -58,11 +58,11 @@ namespace PharmacySystem.API.Controllers
 
         // 🔹 Create Client
         [HttpPost]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult CreateClient(CreateClientDto dto)
         {
             var client = new Client
             {
-                Client_ID = Guid.NewGuid(),
                 Client_Name = dto.Client_Name,
                 Client_Phone = dto.Client_Phone,
                 Client_Address = dto.Client_Address
@@ -81,8 +81,9 @@ namespace PharmacySystem.API.Controllers
         }
 
         // 🔹 Update Client
-        [HttpPut("{id:guid}")]
-        public IActionResult UpdateClient(Guid id, UpdateClientDto dto)
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin,Pharmacist")]
+        public IActionResult UpdateClient(int id, UpdateClientDto dto)
         {
             var client = _context.Clients.Find(id);
 
@@ -105,8 +106,9 @@ namespace PharmacySystem.API.Controllers
         }
 
         // 🔹 Delete Client
-        [HttpDelete("{id:guid}")]
-        public IActionResult DeleteClient(Guid id)
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteClient(int id)
         {
             var client = _context.Clients.Find(id);
 
