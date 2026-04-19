@@ -10,7 +10,7 @@ namespace PharmacySystem.API.models
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\MSSQLLocalDB;Database=PharmacyDB;Trusted_Connection=True;"
+                @"Data Source=SQL5110.site4now.net;Initial Catalog=db_ac8147_pharmacydb;User Id=db_ac8147_pharmacydb_admin;Password=y0ussef@;Encrypt=True;TrustServerCertificate=True;"
             );
 
             return new AppDbContext(optionsBuilder.Options);

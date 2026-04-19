@@ -36,8 +36,8 @@ namespace PharmacySystem.API.Controllers
         {
             return Ok(_context.Employees.ToList());
         }
-
         [HttpPost]
+
         public IActionResult AddEmployee(AddEmployeeDto dto)
         {
             var employee = new Employee
@@ -54,6 +54,23 @@ namespace PharmacySystem.API.Controllers
             _context.SaveChanges();
 
             return Ok(employee);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] 
+        public IActionResult DeleteEmployee(int id)
+        {
+            var employee = _context.Employees.Find(id);
+
+            if (employee == null)
+            {
+                return NotFound(new { message = "Employee not found in the system." });
+            }
+
+            _context.Employees.Remove(employee);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Employee has been deleted successfully." });
         }
     }
 }
