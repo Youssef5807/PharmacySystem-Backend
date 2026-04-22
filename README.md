@@ -7,7 +7,7 @@ This is a professional RESTful Web API built using **.NET Core 8**, designed to 
 
 ## 🔗 Live Demo & Documentation
 The API is fully deployed and accessible here:
-👉 [**Live Swagger UI**](http://youssef5807-01-site1.ntempurl.com/)
+👉 [**Live Swagger UI**](http://youssef5807-001-site1.ntempurl.com/)
 
 ---
 
@@ -33,7 +33,7 @@ The system architecture is based on a robust ERD and includes the following modu
 ---
 
 ## 🧪 How to Test (Swagger UI)
-1.  Open the **[Host URL](http://youssef5807-01-site1.ntempurl.com/)**.
+1.  Open the **[Host URL](http://youssef5807-001-site1.ntempurl.com/)**.
 2.  Navigate to the `Auth` controller and use the **Login** endpoint.
 3.  Copy the `token` from the JSON response.
 4.  Click the **Authorize** button (top right of the page).
