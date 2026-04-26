@@ -20,35 +20,34 @@ namespace PharmacySystem.API.models
         {
             base.OnModelCreating(modelBuilder);
 
-            // ضبط مفتاح العميل
+            // مفاتيح الجداول الأساسية
             modelBuilder.Entity<Client>().HasKey(c => c.Client_ID);
-
-            // ضبط مفتاح الأوردر والترقيم التلقائي
             modelBuilder.Entity<Order>().HasKey(o => o.Order_ID);
-            modelBuilder.Entity<Order>().Property(o => o.Order_ID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Purchase_Order>().HasKey(po => po.PO_ID);
 
-            // ربط Order_Item بـ Medicine (منعاً للعمود الإضافي)
+            // علاقات الـ Order_Item
             modelBuilder.Entity<Order_Item>()
                 .HasOne(oi => oi.Medicine)
-                .WithMany(m => m.OrderItems)
+                .WithMany() // لو عامل لستة في Medicine ضيف اسمها هنا
                 .HasForeignKey(oi => oi.Medicine_ID);
 
-            // ربط Order_Item بـ Order
             modelBuilder.Entity<Order_Item>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
                 .HasForeignKey(oi => oi.Order_ID);
 
-            // علاقات الموظف والعميل مع الأوردر
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Employee)
-                .WithMany(e => e.Orders)
-                .HasForeignKey(o => o.Employee_ID);
+            // --- التعديل الجديد لعلاقات الـ Purchase_Order ---
+            modelBuilder.Entity<Purchase_Order>()
+                .HasOne(po => po.Supplier)
+                .WithMany() // بيفهم إن المورد عنده أوامر شراء كتير
+                .HasForeignKey(po => po.Supplier_ID)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Client)
-                .WithMany(c => c.Orders)
-                .HasForeignKey(o => o.Client_ID);
+            modelBuilder.Entity<Purchase_Order>()
+                .HasOne(po => po.Employee)
+                .WithMany()
+                .HasForeignKey(po => po.Employee_ID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
