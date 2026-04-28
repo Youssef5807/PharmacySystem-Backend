@@ -18,7 +18,7 @@ namespace PharmacySystem.API.Controllers
 
         // 🔹 Get All Clients
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Pharmacist")]
         public IActionResult GetClients()
         {
             var clients = _context.Clients
